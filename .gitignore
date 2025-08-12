@@ -1,0 +1,21 @@
+# node
+node_modules/
+npm-debug.log*
+pnpm-lock.yaml
+yarn.lock
+
+# env
+.env
+.env.*.local
+backend/.env
+frontend/.env
+
+# build
+dist/
+build/
+coverage/
+
+# editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json

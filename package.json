@@ -1,0 +1,14 @@
+{
+  "name": "magusbylili-web",
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "dev": "concurrently -n BACK,FRONT -c green,blue \"npm -w backend run dev\" \"npm -w frontend run dev\"",
+    "build": "npm -w backend run build && npm -w frontend run build",
+    "test": "npm -w backend test && npm -w frontend test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
