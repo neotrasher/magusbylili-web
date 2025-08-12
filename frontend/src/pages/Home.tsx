@@ -4,6 +4,7 @@ import ProductGrid from '../components/ProductGrid'
 import Filters from '../components/Filters'
 import { useQueryParams } from '../hooks/useQueryParams'
 import Pagination from '../components/Pagination'
+import Hero from "../components/Hero";
 
 export default function Home(){
   const { params } = useQueryParams()
@@ -23,7 +24,8 @@ export default function Home(){
   if (error) return <p>Error: {(error as Error).message}</p>
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
+      <Hero />
       <h1 className="text-2xl font-semibold">Productos</h1>
       <Filters />
       <ProductGrid items={data!.data} />
