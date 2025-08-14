@@ -1,39 +1,132 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap');
-/* Tailwind directives — deben estar ARRIBA del resto de utilidades */
+/* ====== Fonts ====== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@400;500;600&display=swap');
+
+/* ====== Tailwind ====== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ====== Tokens (CSS Vars) ====== */
 :root{
-  /* base */
+  /* Base */
   --bg: 0 0% 100%;
   --fg: 0 0% 15%;
   --muted: 0 0% 42%;
   --border: 0 0% 90%;
 
-  /* MagusByLili (lila + dorado) */
+  /* Marca MagusByLili (lila + dorado) */
   --brand-50: 300 30% 96%;
   --brand-100: 300 28% 90%;
-  --brand-500: 304 32% 76%;  /* #D7A9D0 */
+  --brand-500: 304 32% 76%;   /* #D7A9D0 */
   --brand-600: 304 32% 64%;
   --brand-700: 304 32% 52%;
-  --gold-500: 44 43% 58%;    /* #C6A664 */
-}
+  --brand-800: 304 32% 40%;   /* añadida para consistencia */
+  --gold-500: 44 43% 58%;     /* #C6A664 */
 
-body{
-  font-family: Poppins, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  /* Escala tipográfica fluida */
+  --fs-xs: clamp(.78rem, .74rem + .2vw, .82rem);
+  --fs-sm: clamp(.88rem, .84rem + .2vw, .94rem);
+  --fs-md: clamp(1rem, .96rem + .25vw, 1.1rem);
+  --fs-lg: clamp(1.15rem, 1.05rem + .6vw, 1.35rem);
+  --fs-xl: clamp(1.45rem, 1.25rem + 1.2vw, 1.9rem);
+  --fs-2xl: clamp(1.8rem, 1.4rem + 2vw, 2.6rem);
+
+  /* Viewport real en mobile */
+  --dvh: 100vh;
+}
+@supports (height: 100dvh) { :root { --dvh: 100dvh; } }
+
+/* ====== Resets suaves ====== */
+:root { font-synthesis-weight: none; text-rendering: optimizeLegibility; }
+html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+body {
+  font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  font-size: var(--fs-md);
   color: hsl(var(--fg));
   background: hsl(var(--bg));
+  line-height: 1.5;
 }
+img, video, canvas, svg { max-width: 100%; height: auto; }
 
-h1,h2,h3,.font-display{ font-family: "Playfair Display", serif; letter-spacing: -0.01em; }
+/* ====== Font helpers ====== */
+.font-display { font-family: 'Playfair Display', serif; letter-spacing: -0.01em; }
+.text-xs-fluid { font-size: var(--fs-xs); }
+.text-sm-fluid { font-size: var(--fs-sm); }
+.text-md-fluid { font-size: var(--fs-md); }
+.text-lg-fluid { font-size: var(--fs-lg); }
+.text-xl-fluid { font-size: var(--fs-xl); }
+.text-2xl-fluid { font-size: var(--fs-2xl); }
 
-@layer components{
+/* ====== Componentes (Tailwind layer) ====== */
+@layer components {
   .btn { @apply inline-flex items-center justify-center rounded-xl border px-5 py-2.5; }
-  .btn-primary { background: hsl(var(--brand-500)); color:white; border-color: transparent; }
-  .btn-primary:hover { background: hsl(var(--brand-600)); }
-  .chip { @apply inline-flex items-center rounded-full border px-3 py-1 text-sm; }
-  .chip-active { background: hsl(var(--brand-500)); color: white; border-color: hsl(var(--brand-500)); }
+  .btn-primary {
+    background: hsl(var(--gold-500));
+    color: white;
+    border-color: transparent;
+  }
+  .btn-primary:hover { filter: brightness(0.95); }
+
   .card { @apply rounded-2xl border bg-white/70 backdrop-blur p-4; }
   .subtle { color: hsl(var(--muted)); }
+
+  /* Chips base (compactos y táctiles) */
+  .chip {
+    @apply inline-flex items-center justify-center rounded-full border px-3 py-1.5 text-sm font-medium transition-colors duration-150;
+  }
+  .chip-active {
+    background-color: hsl(var(--brand-100) / .9);
+    border-color: hsl(var(--brand-500));
+    color: hsl(var(--brand-800));
+  }
 }
+
+/* ====== Chips — fine tuning sin Tailwind (mejor control de color/hover) ====== */
+:root{
+  --chip-bg:        hsl(var(--brand-50) / .65);
+  --chip-bg-hover:  hsl(var(--brand-50) / .9);
+  --chip-border:    hsl(var(--brand-500) / .35);
+  --chip-fg:        hsl(230 25% 25%);
+  --chip-active-bg: hsl(var(--brand-100) / .9);
+  --chip-active-br: hsl(var(--brand-500) / .8);
+  --chip-active-fg: hsl(230 30% 20%);
+}
+
+.chip {
+  gap: .4rem;
+  line-height: 1;
+  color: var(--chip-fg);
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .06s ease;
+  backdrop-filter: blur(2px);
+}
+.chip:hover { background: var(--chip-bg-hover); }
+.chip:active { transform: translateY(1px); }
+.chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px hsl(var(--brand-500) / .55);
+}
+.chip-active {
+  background: var(--chip-active-bg);
+  border-color: var(--chip-active-br);
+  color: var(--chip-active-fg);
+  box-shadow: 0 1px 0 0 hsl(var(--brand-500) / .15) inset;
+}
+.chip-outline { background: transparent; border-color: var(--chip-border); }
+.chip-dot::before {
+  content:""; width:6px; height:6px; border-radius:9999px;
+  background: hsl(var(--brand-500)); display:inline-block;
+}
+
+/* ====== Mark (resaltado del buscador/coincidencias) ====== */
+mark{
+  background-color: transparent;
+  color: inherit;
+  font-weight: 600;
+  border-bottom: 2px solid hsl(var(--brand-500));
+  padding: 0;
+}
+
+/* ====== Utilidades ====== */
+.overscroll-contain { overscroll-behavior: contain; }
