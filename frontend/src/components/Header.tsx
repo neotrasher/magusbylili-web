@@ -1,9 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../store/cart";
+import { useAuth } from "../store/auth";
+import { api } from "../lib/api";
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import CartSheet from "./CartSheet";
 import SearchPanel from "./SearchPanel";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search, ShoppingBag, UserCircle2 } from "lucide-react";
+
 
 const CATS = [
   {label:"Aretes", slug:"aretes"},
@@ -16,8 +20,12 @@ const CATS = [
 export default function Header(){
   const items = useCart(s=>s.items);
   const count = items.reduce((n,i)=>n+i.qty,0);
+  const user = useAuth(s=>s.user);
+  const setUser = useAuth(s=>s.setUser);
+  const qc = useQueryClient();
   const [openCart,setOpenCart] = useState(false);
   const [openSearch,setOpenSearch] = useState(false);
+
 
   // Cmd/Ctrl + K → abre/cierra panel
   useEffect(()=>{
@@ -33,7 +41,14 @@ export default function Header(){
     <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/logo-magus.png" alt="Magus By Lili" className="h-8 w-auto"/>
+          <img
+            src="/logo-magus.png"
+            alt="Magus By Lili"
+            className="h-8 w-auto"
+            width={96}
+            height={32}
+            decoding="async"
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm">
@@ -54,14 +69,45 @@ export default function Header(){
           >
             <Search size={18} />
           </button>
+          {user?.role === "admin" && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `hidden md:inline-flex px-3 py-2 rounded-lg border text-sm transition ${isActive ? "bg-[hsl(var(--brand-50))]" : "hover:bg-[hsl(var(--brand-50))]"}`
+              }
+            >
+              Admin
+            </NavLink>
+          )}
+          <NavLink
+            to={user ? "/account" : "/auth"}
+            className={({ isActive }) =>
+              `hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${isActive ? "bg-[hsl(var(--brand-50))]" : "hover:bg-[hsl(var(--brand-50))]"}`
+            }
+          >
+            <UserCircle2 size={16} />
+            {user ? "Cuenta" : "Ingresar"}
+          </NavLink>
+          {user && (
+            <button
+              onClick={async () => {
+                await api.auth.logout();
+                setUser(null);
+                qc.clear();
+              }}
+              className="hidden md:inline-flex px-3 py-2 rounded-lg border text-sm transition hover:bg-[hsl(var(--brand-50))]"
+            >
+              Salir
+            </button>
+          )}
           <button
             onClick={()=>setOpenCart(true)}
             className="relative p-2 rounded-lg border hover:bg-[hsl(var(--brand-50))] transition"
             aria-label="Carrito"
           >
             <ShoppingBag size={18} />
-            {count>0 && (
-              <span className="absolute -top-1 -right-1 text-[10px] bg-black text-white rounded-full px-1.5 py-[1px]">
+{count>0 && (
+              <span className="absolute -top-1 -right-1 text-[10px] bg-[#C9A86C] text-white rounded-full px-1.5 py-[1px] animate-pulse">
                 {count}
               </span>
             )}
@@ -75,3 +121,4 @@ export default function Header(){
     </header>
   );
 }
+

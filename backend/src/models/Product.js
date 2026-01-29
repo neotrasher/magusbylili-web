@@ -5,6 +5,7 @@ const ProductSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   stock: { type: Number, default: 0 },
   category: String,
-  thumbnails: [String]
+  thumbnails: [String],
+  thumbnailPaths: [String]
 }, { timestamps: true })
 export default mongoose.model('Product', ProductSchema)

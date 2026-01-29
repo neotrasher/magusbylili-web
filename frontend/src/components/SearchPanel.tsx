@@ -106,8 +106,13 @@ export default function SearchPanel({open,onClose}:{open:boolean;onClose:()=>voi
                   <img
                     src={p.thumbnails?.[0]}
                     className="w-14 h-14 md:w-16 md:h-16 rounded-lg object-cover bg-neutral-100 shrink-0"
-                    alt=""
+                    alt={p.title}
+                    loading="lazy"
+                    decoding="async"
+                    width={64}
+                    height={64}
                   />
+
                   <div className="flex-1 min-w-0">
                     <div
                       className="font-medium text-sm-fluid md:text-md-fluid truncate"

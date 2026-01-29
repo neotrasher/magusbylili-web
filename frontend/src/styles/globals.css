@@ -65,6 +65,11 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
     color: white;
     border-color: transparent;
   }
+  .btn-secondary {
+    background: hsl(var(--brand-50));
+    color: hsl(var(--fg));
+  }
+
   .btn-primary:hover { filter: brightness(0.95); }
 
   .card { @apply rounded-2xl border bg-white/70 backdrop-blur p-4; }
